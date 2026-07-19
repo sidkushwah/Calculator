@@ -13,7 +13,7 @@
         padding: 0;
         box-sizing: border-box;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        transition: background 0.3s ease, color 0.3s ease; /* Smooth transition */
+        transition: background 0.3s ease, color 0.3s ease;
     }
 
     body {
@@ -26,7 +26,6 @@
         padding: 20px;
     }
 
-    /* Main Container */
     .app-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -64,6 +63,13 @@
         gap: 10px;
     }
 
+    /* Top Action Buttons (Theme & Formula) */
+    .action-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 5px;
+    }
+
     /* Inputs & Selects */
     select, input {
         width: 100%;
@@ -88,7 +94,7 @@
     }
 
     /* Primary Neon Button */
-    button {
+    .btn-primary {
         width: 100%;
         padding: 14px;
         background: linear-gradient(135deg, #00c6ff, #0072ff);
@@ -102,12 +108,12 @@
         margin-top: 10px;
     }
 
-    button:hover {
+    .btn-primary:hover {
         transform: translateY(-2px);
         box-shadow: 0 10px 20px rgba(0, 114, 255, 0.4);
     }
 
-    button:active {
+    .btn-primary:active {
         transform: translateY(0);
     }
 
@@ -118,12 +124,14 @@
         color: #94a3b8;
         font-size: 0.9rem;
         padding: 10px;
-        margin-top: 0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex: 1;
     }
     
     .btn-secondary:hover {
         background: rgba(255, 255, 255, 0.2);
-        box-shadow: none;
         color: white;
     }
 
@@ -170,6 +178,40 @@
         animation: fadeIn 0.3s ease-in;
     }
 
+    /* Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(5px);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: inherit;
+        font-size: 1.5rem;
+        cursor: pointer;
+        opacity: 0.7;
+    }
+
+    .modal-close:hover { opacity: 1; }
+
+    .formula-code {
+        background: rgba(0,0,0,0.3);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: #22c55e;
+        font-family: monospace;
+    }
+
     /* Toast Notification */
     .toast {
         position: fixed;
@@ -204,9 +246,7 @@
         border: 1px solid rgba(255, 255, 255, 1);
         box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
     }
-    body.light-mode h2 {
-        color: #0284c7; /* Darker blue for contrast */
-    }
+    body.light-mode h2 { color: #0284c7; }
     body.light-mode select, body.light-mode input {
         background: rgba(255, 255, 255, 0.8);
         color: #0f172a;
@@ -237,6 +277,10 @@
     body.light-mode .history-container::-webkit-scrollbar-thumb {
         background: rgba(0, 0, 0, 0.2);
     }
+    body.light-mode .formula-code {
+        background: rgba(0,0,0,0.05);
+        color: #16a34a;
+    }
 </style>
 </head>
 <body>
@@ -246,8 +290,10 @@
     <div class="glass-card">
         <h2>🧮 Calculator Panel</h2>
         
-        <!-- Theme Toggle Button -->
-        <button id="themeToggleBtn" class="btn-secondary" onclick="toggleTheme()" style="margin-bottom: 10px;">☀️ Light Mode</button>
+        <div class="action-row">
+            <button id="themeToggleBtn" class="btn-secondary" onclick="toggleTheme()">☀️ Light Mode</button>
+            <button class="btn-secondary" onclick="document.getElementById('formulaModal').style.display='flex'">📐 Formulas</button>
+        </div>
         
         <select id="operation" onchange="updateFields()">
             <option value="add">➕ Addition</option>
@@ -271,7 +317,7 @@
         <input type="number" id="num2" placeholder="Second Number" autocomplete="off">
         <input type="number" id="num3" placeholder="Third Number" style="display: none;" autocomplete="off">
 
-        <button onclick="calculate(false)">Calculate</button>
+        <button class="btn-primary" onclick="calculate(false)">Calculate</button>
     </div>
 
     <!-- RIGHT PANEL: RESULT & HISTORY -->
@@ -291,7 +337,32 @@
             <!-- History items populate here -->
         </div>
         
-        <button class="btn-secondary" onclick="clearHistory()">🗑️ Clear History</button>
+        <button class="btn-secondary" onclick="clearHistory()" style="width: 100%;">🗑️ Clear History</button>
+    </div>
+</div>
+
+<!-- Formula Modal -->
+<div id="formulaModal" class="modal-overlay">
+    <div class="glass-card" style="max-width: 450px; width: 90%; position: relative;">
+        <button class="modal-close" onclick="document.getElementById('formulaModal').style.display='none'">✖</button>
+        <h2>📐 Formula Guide</h2>
+        
+        <div style="margin-top: 10px; font-size: 1rem; line-height: 1.8;">
+            <strong style="color: #00D4FF;">🔢 Basic Math</strong><br>
+            • Addition: <span class="formula-code">x + y</span><br>
+            • Subtraction: <span class="formula-code">x - y</span><br>
+            • Multiplication: <span class="formula-code">x × y</span><br>
+            • Division: <span class="formula-code">x ÷ y</span><br><br>
+
+            <strong style="color: #00D4FF;">🔄 Conversions</strong><br>
+            • Celsius → Fahrenheit: <span class="formula-code">(°C × 1.8) + 32</span><br>
+            • Kilometers → Miles: <span class="formula-code">km × 0.621371</span><br><br>
+
+            <strong style="color: #00D4FF;">🧊 Volume</strong><br>
+            • Cube: <span class="formula-code">Side³</span><br>
+            • Cuboid: <span class="formula-code">Length × Breadth × Height</span><br>
+            • Cylinder: <span class="formula-code">π × Radius² × Height</span>
+        </div>
     </div>
 </div>
 
@@ -327,7 +398,6 @@
         }
     }
 
-    // Check saved theme on load
     if (localStorage.getItem('calcTheme') === 'light') {
         document.body.classList.add('light-mode');
         document.getElementById('themeToggleBtn').innerHTML = '🌙 Dark Mode';
@@ -477,6 +547,13 @@
 
     document.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') calculate(false);
+    });
+
+    // Close modal if user clicks outside the modal card
+    document.getElementById('formulaModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.style.display = 'none';
+        }
     });
 
     function addToHistory(formula) {
