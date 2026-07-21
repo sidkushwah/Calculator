@@ -25,7 +25,7 @@
     <div class="keypad">
         <button class="btn-action" onclick="clearAll()">AC</button>
         <button class="btn-action" onclick="deleteLast()">⌫</button>
-        <button class="btn-formula" onclick="openModal()">📐 Formulas</button>
+        <button class="btn-formula" onclick="openModal()">📐 Formulas & Ref</button>
         <button class="btn-operator" onclick="appendChar('÷')">÷</button>
 
         <button class="btn-number" onclick="appendChar('7')">7</button>
@@ -49,43 +49,18 @@
     </div>
 </div>
 
-<!-- Formula Modal -->
+<!-- Dynamic Formula Modal -->
 <div id="formulaModal" class="modal-overlay">
     <div class="modal-card">
         <button class="modal-close" onclick="closeModal()">✖</button>
         <h2>📐 Formula Library</h2>
-        <p class="modal-subtitle">Select a formula to apply it to your current result.</p>
         
-        <div class="modal-content">
-            <!-- Conversions -->
-            <div class="formula-item" onclick="applyFormula('c_to_f')">
-                <div class="formula-title">Celsius to Fahrenheit</div>
-                <div class="formula-desc">Multiplies by 1.8 and adds 32.</div>
-            </div>
-            <div class="formula-item" onclick="applyFormula('km_to_mi')">
-                <div class="formula-title">Kilometers to Miles</div>
-                <div class="formula-desc">Multiplies by 0.621371.</div>
-            </div>
-
-            <!-- Geometry (Single Variable) -->
-            <div class="formula-item" onclick="applyFormula('cube_vol')">
-                <div class="formula-title">Volume of a Cube</div>
-                <div class="formula-desc">Calculates Side³. (Uses current number as Side).</div>
-            </div>
-            <div class="formula-item" onclick="applyFormula('circle_area')">
-                <div class="formula-title">Area of a Circle</div>
-                <div class="formula-desc">Calculates π × r². (Uses current number as Radius).</div>
-            </div>
-
-            <!-- Statistics -->
-            <div class="formula-item" onclick="applyFormula('variance')">
-                <div class="formula-title">Square (x²)</div>
-                <div class="formula-desc">Multiplies the current number by itself.</div>
-            </div>
-            <div class="formula-item" onclick="applyFormula('sqrt')">
-                <div class="formula-title">Square Root (√x)</div>
-                <div class="formula-desc">Finds the principal square root of the current number.</div>
-            </div>
+        <!-- Search Bar -->
+        <input type="text" id="formulaSearch" class="search-bar" placeholder="Search formulas, stats, physics..." onkeyup="filterFormulas()">
+        
+        <!-- Dynamic Content Container -->
+        <div class="modal-content" id="formulaListContainer">
+            <!-- JS will inject formulas here -->
         </div>
     </div>
 </div>
